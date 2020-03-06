@@ -1,7 +1,12 @@
+#!/usr/bin/python3
+
 """Script which used to check SSH-host connections from a text file"""
 import paramiko
 import sys
 import geoip2.database
+import argparse
+from timeit import default_timer as timer
+
 
 def main():
     parser = cmd_arg_parser()
@@ -13,8 +18,15 @@ def main():
     host = Host()
     io = InputOutput(input_f, output_f, input_list, output_list)
     input_list.handling_list(output_list, host, io)
-    print(f'Filtered: {input_list.bad_host_count} bad hosts. \n
+    print(f'Filtered: {input_list.bad_host_count} bad hosts. \
         Passed the test: {output_list.count_of_good_hosts} hosts')
+
+
+def cmd_arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input_file', default='ssh_nocheck.txt')
+    parser.add_argument('-o', '--output_file', default='goods.txt')
+    return parser
 
 
 class InputList:
@@ -99,7 +111,7 @@ class Host:
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh.connect(hostname=self.ip, username=self.user, password=self.password, port=self.port, timeout=3)
-            print(f'Connected to host {self.ip}\n
+            print(f'Connected to host {self.ip}\
                     Access time to host: {self.access_time()} seconds')
             return True
         except paramiko.AuthenticationException:
@@ -145,4 +157,5 @@ class InputOutput:
             print('Can\'t write to output file, IO error')
             exit(1)
 
-
+if __name__ == "__main__":
+    main()
