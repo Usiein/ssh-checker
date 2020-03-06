@@ -1,7 +1,7 @@
 """Script which used to check SSH-host connections from a text file"""
 import paramiko
 import sys
-
+import geoip2.database
 
 def main():
     parser = cmd_arg_parser()
@@ -113,6 +113,11 @@ class Host:
     def access_time(self):
         self.host_access_time = timer() - self.start_time
         return round(self.host_access_time, 2)
+
+    def get_location(self, ip):
+        reader = geoip2.database.Reader('GeoLite2-Country.mmdb')
+        response = reader.country(ip)
+        return response.country.names['en']
 
 class InputOutput:
     def __init__(self, input_f, output_f, input_list, output_list):
