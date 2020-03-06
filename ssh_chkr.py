@@ -60,17 +60,27 @@ class InputList:
             else:
                 self.bad_host_count += 1
 
+    """def prepare_data_to_write(self, line, host):
+        joined = ' '.join(line) + ' '
+        location = str(host.get_location(host.ip)) + ' '
+        accesstime = str(host.host_access_time)
+        new_line = joined + location + accesstime + '\n'
+        return new_line"""
+
+
+class OutputList:
+    def __init__(self):
+        self.count_of_good_hosts = 0
+
+    def write_data(self, io, data):
+        io.write_data_to_file(data, flag='a')
+
     def prepare_data_to_write(self, line, host):
         joined = ' '.join(line) + ' '
         location = str(host.get_location(host.ip)) + ' '
         accesstime = str(host.host_access_time)
         new_line = joined + location + accesstime + '\n'
         return new_line
-
-
-class OutputList:
-    def __init__(self):
-        self.count_of_good_hosts = 0
 
 
 class Host:
