@@ -1,4 +1,7 @@
 """Script which used to check SSH-host connections from a text file"""
+import paramiko
+import sys
+
 
 def main():
     parser = cmd_arg_parser()
@@ -44,6 +47,13 @@ class InputList:
                     self.bad_host_count += 1
             else:
                 self.bad_host_count += 1
+
+    def prepare_data_to_write(self, line, host):
+        joined = ' '.join(line) + ' '
+        location = str(host.get_location(host.ip)) + ' '
+        accesstime = str(host.host_access_time)
+        new_line = joined + location + accesstime + '\n'
+        return new_line
 
 
 class OutputList:
@@ -99,6 +109,10 @@ class Host:
         except ConnectionError:
             print(f'Could not connect to {self.ip}')
             return False
+
+    def access_time(self):
+        self.host_access_time = timer() - self.start_time
+        return round(self.host_access_time, 2)
 
 class InputOutput:
     def __init__(self, input_f, output_f, input_list, output_list):
