@@ -135,4 +135,14 @@ class InputOutput:
             print('can\'t read from file, IO error')
             exit(1)
 
+    def write_data_to_file(self, line, output_list, flag):
+        try:
+            with open(self.output_file, flag) as file:
+                file.write(line)
+                output_list.count_of_good_hosts += 1
+            return True
+        except IOError:
+            print('Can\'t write to output file, IO error')
+            exit(1)
+
 
